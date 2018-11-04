@@ -1,3 +1,27 @@
-<h1>New Order</h1>
+<h1>Confirm Your Order</h1>
 
-<%= render 'form', order: @order %>
+  <% if @addresses.length > 0 %>
+    <h4>Shipping Address</h4>
+    <p>Please confirm your desired shipping address before submitting your order.</p>
+    <%= form_for @order, method: :post do |f| %>
+
+      <% @addresses.each do |address| %>
+
+        <div class="field">
+          <%= f.radio_button :address, address.id, checked: (address == @addresses.first) %>
+          <%= f.label :address, "#{address.nickname}: #{address.street}, #{address.city}, #{address.state} #{address.zip}" %>
+        </div>
+
+      <% end %>
+
+        <p><%= link_to "Add an address", new_user_address_path(@user) %></p>
+
+        <div class="actions">
+          <%= f.submit "Submit Order" %>
+        </div>
+
+    <% end %>
+  <% else %>
+    <h4>You have no addresses saved.</h4>
+    <p>Please <%= link_to "add an address", new_user_address_path(@user) %> before checking out.<p>
+  <% end %>

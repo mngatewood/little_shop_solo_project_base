@@ -3,14 +3,15 @@ require 'rails_helper'
 RSpec.describe 'Admin Stats' do
   context 'as an admin, viewing my dashboard' do 
     before(:each) do
-      @admin = create(:admin)
-      @merchant_1 = create(:merchant)
-      @merchant_2 = create(:merchant)
+      @admin = create(:user, :admin)
+      @merchant_1 = create(:user, :merchant)
+      @merchant_2 = create(:user, :merchant)
 
-      @user_1 = create(:user, city: 'Denver', state: 'CO')
-      @user_2 = create(:user, city: 'Los Angeles', state: 'CA')
-      @user_3 = create(:user, city: 'Tampa', state: 'FL')
-      @user_4 = create(:user, city: 'NYC', state: 'NY')
+      @user_1, @user_2, @user_3, @user_4 = create_list(:user, 4) 
+        create(:address, city: 'Denver', state: 'CO', user: @user_1.id)
+        create(:address, city: 'Los Angeles', state: 'CA', user: @user_2.id)
+        create(:address, city: 'Tampa', state: 'FL', user: @user_3.id)
+        create(:address, city: 'NYC', state: 'NY', user: @user_4.id)
 
       @item_1 = create(:item, user: @merchant_1)
 

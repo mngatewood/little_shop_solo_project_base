@@ -9,16 +9,21 @@ RSpec.describe Order, type: :model do
 
   describe 'Validations' do 
     it { should validate_presence_of(:status) }
+    it { should validate_presence_of(:street) }
+    it { should validate_presence_of(:city) }
+    it { should validate_presence_of(:state) }
+    it { should validate_presence_of(:zip) }
   end
 
   describe 'Class Methods' do
     before(:each) do 
-      @user_1 = create(:user, state: 'CO')
-      @user_2 = create(:user, state: 'CA')
-      @user_3 = create(:user, state: 'FL')
-      @user_4 = create(:user, state: 'NY')
+      @user_1, @user_2, @user_3, @user_4 = create_list(:user, 4)
+      create(:address, state: 'CO', user: @user_1.id)
+      create(:address, state: 'CA', user: @user_2.id)
+      create(:address, state: 'FL', user: @user_3.id)
+      create(:address, state: 'NY', user: @user_4.id)
 
-      @merchant = create(:merchant)
+      @merchant = create(:user, :merchant)
       item_1 = create(:item, user: @merchant)
 
       # Colorado is 1st place
@@ -69,8 +74,8 @@ RSpec.describe Order, type: :model do
 
   describe 'Instance Methods' do
     it '.total' do
-      @user = create(:user)
-      @merchant = create(:merchant)
+      @user = create(:user_with_addresses)
+      @merchant = create(:user, :merchant)
       @item_1, @item_2, @item_3 = create_list(:item, 3, user: @merchant)
       
       @order_1 = create(:order, user: @user)

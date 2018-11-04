@@ -2,8 +2,8 @@ require 'rails_helper'
 
 RSpec.describe 'Merchant Orders' do 
   before(:each) do
-    @user = create(:user)
-    @merchant = create(:merchant)
+    @user = create(:user_with_addresses)
+    @merchant = create(:user, :merchant)
     @item_1, @item_2, @item_3, @item_4, @item_5 = create_list(:item, 5, user: @merchant)
     
     @order_1 = create(:order, user: @user)
@@ -14,7 +14,7 @@ RSpec.describe 'Merchant Orders' do
     create(:fulfilled_order_item, order: @order_2, item: @item_2)
     create(:fulfilled_order_item, order: @order_2, item: @item_3)
 
-    @admin = create(:admin)
+    @admin = create(:user, :admin)
   end
 
   context 'merchant user' do 
@@ -27,7 +27,7 @@ RSpec.describe 'Merchant Orders' do
       expect(current_path).to eq(dashboard_orders_path)
     end
     it 'does not see a link to view dashboard orders if there are no orders' do 
-      merchant_2 = create(:merchant)
+      merchant_2 = create(:user, :merchant)
       allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(merchant_2)
 
       visit dashboard_path 
@@ -43,7 +43,7 @@ RSpec.describe 'Merchant Orders' do
       expect(page).to_not have_content("Order #{@order_2.id}")
     end
     it 'displays data for an order when viewing the order show page' do
-      merchant_1, merchant_2 = create_list(:merchant, 2)
+      merchant_1, merchant_2 = create_list(:user, 2, :merchant)
       item_1, item_2 = create_list(:item, 2, user: merchant_1)
       item_2.update(user: merchant_2)
       order_1 = create(:order, user: @user)
@@ -57,10 +57,10 @@ RSpec.describe 'Merchant Orders' do
       expect(current_path).to eq(order_path(order_1))
 
       expect(page).to have_content(@user.name)
-      expect(page).to have_content(@user.address)
-      expect(page).to have_content(@user.city)
-      expect(page).to have_content(@user.state)
-      expect(page).to have_content(@user.zip)
+      expect(page).to have_content(@user.default_address.city)
+      expect(page).to have_content(@user.default_address.city)
+      expect(page).to have_content(@user.default_address.state)
+      expect(page).to have_content(@user.default_address.zip)
 
       expect(page).to_not have_content(item_2.name)
       old_inventory = item_1.inventory
@@ -79,7 +79,7 @@ RSpec.describe 'Merchant Orders' do
       expect(old_inventory - item_check.inventory).to eq(oi_1.quantity)
     end
     it 'blocks me from fulfilling an order if I do not have enough inventory' do 
-      merchant_1 = create(:merchant)
+      merchant_1 = create(:user, :merchant)
       item_1, item_2 = create_list(:item, 2, user: merchant_1)
       order_1 = create(:order, user: @user)
       oi_1 = create(:order_item, quantity: 100, order: order_1, item: item_1)

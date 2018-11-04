@@ -8,6 +8,8 @@ Rails.application.routes.draw do
   get '/register', to: 'users#new'
   post '/register', to: 'users#create'
 
+  # post '/users/:id/orders/new', to: 'orders#create', as: 'new_user_order'
+
   get '/profile', to: 'users#show'
   namespace :profile do
     get 'edit'
@@ -27,7 +29,10 @@ Rails.application.routes.draw do
 
   resources :items, only: [:index, :show]
   resources :users, only: [:index, :new, :create, :edit, :show, :update] do 
-    resources :orders, only: [:index, :update]
+    resources :orders, only: [:index, :new, :show, :edit, :update] 
+    resources :addresses, only: [:new, :create, :edit, :update, :destroy] do
+      patch '/default', to: 'addresses#default', as: 'default'
+    end
     patch 'enable', to: 'users#update'
     patch 'disable', to: 'users#update'
   end

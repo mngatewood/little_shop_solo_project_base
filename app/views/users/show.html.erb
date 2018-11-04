@@ -8,12 +8,36 @@
   <table>
     <tr><td>name:</td><td><%= @user.name %></td></tr>
     <tr><td>email:</td><td><%= @user.email %></td></tr>
-    <tr><td>address:</td><td>
-      <%= @user.address %>
-      <%= @user.city %>, <%= @user.state %>
-      <%= @user.zip %></td></tr>
+    <% if @user.default_address %>
+      <tr>
+        <td>
+          <%= @user.default_address.nickname %> (default) <br>
+          <%= link_to "edit", edit_user_address_path(@user, @user.default_address) %> &vert; 
+          <%= link_to "delete", user_address_path(@user, @user.default_address), method: :delete %>
+        </td>
+        <td><%= @user.default_address.street %><br>
+          <%= "#{@user.default_address.city}, #{@user.default_address.state} #{@user.default_address.zip}" %></td>
+      </tr>
+    <% else %>
+      <tr><td>No default address</td><td></td></tr>
+    <% end %>
   </table>
-
+  <% if @user.other_addresses.length > 0 %>
+    <h4>Other Addresses</h4>
+    <table>
+      <% @user.other_addresses.each do |address| %>
+        <tr class="address-<%= address.id %>-container">
+          <td><%= address.nickname %> 
+            <%= link_to "set as default", user_address_default_path(@user, address), method: :patch %><br>
+            <%= link_to "edit", edit_user_address_path(@user, address) %> &vert; 
+            <%= link_to "delete", user_address_path(@user, address), method: :delete %></td>
+          <td><%= address.street %><br>
+            <%= "#{address.city}, #{address.state} #{address.zip}" %></td>
+        </tr>
+      <% end %>
+    </table>
+  <% end %>
+  <p><%= link_to "Add an Address", new_user_address_path(@user) %><p>
   <p><%= link_to "Edit Profile Data", current_admin? ? edit_user_path(@user) : profile_edit_path %></p>
 </div>
 

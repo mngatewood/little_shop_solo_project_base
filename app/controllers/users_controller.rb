@@ -22,6 +22,7 @@ class UsersController < ApplicationController
 
   def new
     @user = User.new
+    @address = Address.new
   end
 
   def edit
@@ -33,6 +34,7 @@ class UsersController < ApplicationController
       elsif current_user && params[:id] && current_user.id != params[:id]
         render file: 'errors/not_found', status: 404
       end
+      @addresses = @user.addresses if @user
     end
   end
 
@@ -83,7 +85,7 @@ class UsersController < ApplicationController
 
   def create
     @user = User.new(user_params)
-    if @user.save
+    if @user.save && self.save_user_address
       session[:user_id] = @user.id
       redirect_to profile_path, notice: 'Welcome to the site!'
     else
@@ -91,10 +93,23 @@ class UsersController < ApplicationController
     end
   end
 
+  def save_user_address
+    @address = @user.addresses.new(address_params.merge(default: true))
+    if @address.save
+      return true
+    else
+      flash[:error] = "Could not save address.  Please try again."
+    end
+  end
+
   private
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def user_params
-      params.require(:user).permit(:email, :password, :password_confirmation, :name, :address, :city, :state, :zip)
+      params.require(:user).permit(:email, :password, :password_confirmation, :name)
+    end
+
+    def address_params
+      params.require(:address).permit(:street, :city, :state, :zip, :nickname)
     end
 end

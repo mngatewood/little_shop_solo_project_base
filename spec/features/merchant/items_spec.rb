@@ -4,7 +4,7 @@ include ActionView::Helpers::NumberHelper
 RSpec.describe 'Merchant Items' do 
   context 'as a merchant' do
     before(:each) do 
-      @merchant = create(:merchant)
+      @merchant = create(:user, :merchant)
     end
     describe 'when I visit /dashboard' do 
       it 'should show me a link to see my items for sale' do

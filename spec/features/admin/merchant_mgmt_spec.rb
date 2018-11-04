@@ -2,10 +2,10 @@ require 'rails_helper'
 
 RSpec.describe 'Admin-only merchant management' do 
   before(:each) do
-    @admin = create(:admin)
-    @active_merchant = create(:merchant)
-    @inactive_merchant = create(:inactive_merchant)
-    @user = create(:user)
+    @admin = create(:user, :admin)
+    @active_merchant = create(:user, :merchant)
+    @inactive_merchant = create(:user, :inactive_merchant)
+    @user = create(:user_with_addresses)
   end
   it 'allows admin to disable an enabled merchant account' do
     visit login_path
