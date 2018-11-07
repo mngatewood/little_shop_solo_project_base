@@ -15,6 +15,14 @@ FactoryBot.define do
     state { "CO" }
     zip { "80014" }
   end
+  factory :completed_order_elsewhere, parent: :order do
+    user
+    status { "completed" }
+    street { "123 Main Street" }
+    city { "Dallas" }
+    state { "TX" }
+    zip { "80014" }
+  end
   factory :cancelled_order, parent: :order do
     user
     status { "cancelled" }

@@ -36,6 +36,14 @@
   top: -10px;
 }
 
+.leaderboards-container {
+  display: flex;
+}
+
+.leaderboard {
+  width: 50%;
+}
+
 @media (min-width: 576px) {
   .navbar-icon-top.navbar-expand-sm .navbar-nav .nav-link {
     text-align: center;

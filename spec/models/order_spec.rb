@@ -18,10 +18,10 @@ RSpec.describe Order, type: :model do
   describe 'Class Methods' do
     before(:each) do 
       @user_1, @user_2, @user_3, @user_4 = create_list(:user, 4)
-      create(:address, state: 'CO', user: @user_1.id)
-      create(:address, state: 'CA', user: @user_2.id)
-      create(:address, state: 'FL', user: @user_3.id)
-      create(:address, state: 'NY', user: @user_4.id)
+      create(:address, state: 'CO', user: @user_1)
+      create(:address, state: 'CA', user: @user_2)
+      create(:address, state: 'FL', user: @user_3)
+      create(:address, state: 'NY', user: @user_4)
 
       @merchant = create(:user, :merchant)
       item_1 = create(:item, user: @merchant)
@@ -36,19 +36,19 @@ RSpec.describe Order, type: :model do
       order = create(:completed_order, user: @user_1)
       create(:fulfilled_order_item, order: order, item: item_1)
       # California is 2nd place
-      order = create(:completed_order, user: @user_2)
+      order = create(:completed_order, user: @user_2, state: 'CA')
       create(:fulfilled_order_item, order: order, item: item_1)
-      order = create(:completed_order, user: @user_2)
+      order = create(:completed_order, user: @user_2, state: 'CA')
       create(:fulfilled_order_item, order: order, item: item_1)
-      order = create(:completed_order, user: @user_2)
+      order = create(:completed_order, user: @user_2, state: 'CA')
       create(:fulfilled_order_item, order: order, item: item_1)
       # Sorry Florida
-      order = create(:completed_order, user: @user_3)
+      order = create(:completed_order, user: @user_3, state: 'FL')
       create(:fulfilled_order_item, order: order, item: item_1)
-      order = create(:completed_order, user: @user_4)
       # NY is 3rd place
+      order = create(:completed_order, user: @user_4, state: 'NY')
       create(:fulfilled_order_item, order: order, item: item_1)
-      order = create(:completed_order, user: @user_4)
+      order = create(:completed_order, user: @user_4, state: 'NY')
       create(:fulfilled_order_item, order: order, item: item_1)    end
     it '.top_shipping(:state, 3)' do 
       expect(Order.top_shipping(:state, 3)).to eq(['CO', 'CA', 'NY'])

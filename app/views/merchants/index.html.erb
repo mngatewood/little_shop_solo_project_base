@@ -1,5 +1,47 @@
 <h1>Merchants</h1>
 
+<div class="leaderboards-container">
+  <div class="leaderboard">
+    <h2>Top Sellers</h2>
+    <p>(last 30 days)</p>
+    <ul class="stats-top-sellers">
+      <% @top_sellers.each do |merchant| %>
+        <li><%= link_to merchant.name, merchant_path(merchant) %></li>
+      <% end %>
+    </ul>
+  </div>
+  <div>
+    <h2>Top Fulfillers</h2>
+    <p>(last 30 days)</p>
+    <ul class="stats-top-fulfillers">
+      <% @top_fulfillers.each do |merchant| %>
+        <li><%= link_to merchant.name, merchant_path(merchant) %></li>
+      <% end %>
+  </div>
+</div>
+<% if current_user && current_user.role == 'user' %>
+  <div class="leaderboards-container">
+    <div class="leaderboard">
+      <h2>Top Sellers for <%= current_user.default_address.state %></h2>
+      <p>(last 30 days)</p>
+      <ul class="stats-top-sellers-state">
+        <% @top_sellers_state.each do |merchant| %>
+          <li><%= link_to merchant.name, merchant_path(merchant) %></li>
+        <% end %>
+      </ul>
+    </div>
+    <div class="leaderboard">
+      <h2>Top Sellers for <%= current_user.default_address.city %></h2>
+      <p>(last 30 days)</p>
+      <ul class="stats-top-sellers-city">
+        <% @top_sellers_city.each do |merchant| %>
+          <li><%= link_to merchant.name, merchant_path(merchant) %></li>
+        <% end %>
+      </ul>
+    </div>
+  </div>
+<% end %>
+
 <table>
   <thead>
     <tr>

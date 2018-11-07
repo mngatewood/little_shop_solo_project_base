@@ -57,10 +57,9 @@ RSpec.describe 'Merchant Orders' do
       expect(current_path).to eq(order_path(order_1))
 
       expect(page).to have_content(@user.name)
-      expect(page).to have_content(@user.default_address.city)
-      expect(page).to have_content(@user.default_address.city)
-      expect(page).to have_content(@user.default_address.state)
-      expect(page).to have_content(@user.default_address.zip)
+      expect(page).to have_content(@order_1.city)
+      expect(page).to have_content(@order_1.state)
+      expect(page).to have_content(@order_1.zip)
 
       expect(page).to_not have_content(item_2.name)
       old_inventory = item_1.inventory

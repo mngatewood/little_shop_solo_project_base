@@ -20,10 +20,10 @@ class Order < ApplicationRecord
       .joins('join order_items on order_items.order_id=orders.id')
       .where("orders.status != ?", :cancelled)
       .where("order_items.fulfilled=?", true)
-      .order("count(users.#{metric}) desc")
-      .group("users.#{metric}")
+      .order("count(orders.#{metric}) desc")
+      .group("orders.#{metric}")
       .limit(quantity)
-      .pluck("users.#{metric}")
+      .pluck("orders.#{metric}")
   end
 
   def self.top_buyers(quantity)

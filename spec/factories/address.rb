@@ -5,6 +5,12 @@ FactoryBot.define do
       default { true }
     end
 
+    trait :denver do
+      default { true }
+      city { "Denver" }
+      state { "CO" }
+    end
+
     street_numbers = (1..9999).to_a
     street_names = ['Main', 'First', 'Oak', 'Pine', 'Maple', 'Washington', 'Elm', 'Second']
     street_types = ['Street', 'Boulevard', 'Way', 'Avenue', 'Drive', 'Circle', 'Lane', 'Highway']
