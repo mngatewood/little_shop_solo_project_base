@@ -572,8 +572,8 @@ RSpec.describe User, type: :model do
                         merchant_2,
                         merchant_1 ]
 
-      expect(User.top_fulfillers_my_region('city', user)).to eq(top_merchants)
-      expect(User.top_fulfillers_my_region('state', user)).to eq(top_merchants)
+      expect(User.top_fulfillers_my_region(:city, user)).to eq(top_merchants)
+      expect(User.top_fulfillers_my_region(:state, user)).to eq(top_merchants)
 
     end
   end

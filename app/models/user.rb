@@ -181,7 +181,7 @@ class User < ApplicationRecord
   end
 
   def self.top_fulfillers_my_region(region, user)
-    my_region = (region == 'city' ? user.default_address.city : user.default_address.state)
+    my_region = (region == :city ? user.default_address.city : user.default_address.state)
 
     User
       .select("distinct users.*, sum(order_items.quantity) as items_sold")
