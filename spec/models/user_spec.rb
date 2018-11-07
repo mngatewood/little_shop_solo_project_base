@@ -160,11 +160,11 @@ RSpec.describe User, type: :model do
       expect(merchant.total_inventory).to eq(item_1.inventory + item_2.inventory)
     end
     it '.top_3_shipping_states' do
-      @user_1, @user_2, @user_3, @user_4 = create_list(:user, 4)
-      create(:address, state: 'CO', user: @user_1.id)
-      create(:address, state: 'CA', user: @user_2.id)
-      create(:address, state: 'FL', user: @user_3.id)
-      create(:address, state: 'NY', user: @user_4.id)
+      user_1, user_2, user_3, user_4 = create_list(:user, 4)
+      create(:address, state: 'CO', user: user_1)
+      create(:address, state: 'CA', user: user_2)
+      create(:address, state: 'FL', user: user_3)
+      create(:address, state: 'NY', user: user_4)
 
       merchant = create(:user, :merchant)
       item_1 = create(:item, user: merchant)
@@ -179,29 +179,29 @@ RSpec.describe User, type: :model do
       order = create(:completed_order, user: user_1)
       create(:fulfilled_order_item, order: order, item: item_1)
       # California is 2nd place
-      order = create(:completed_order, user: user_2)
+      order = create(:completed_order, user: user_2, state: 'CA')
       create(:fulfilled_order_item, order: order, item: item_1)
-      order = create(:completed_order, user: user_2)
+      order = create(:completed_order, user: user_2, state: 'CA')
       create(:fulfilled_order_item, order: order, item: item_1)
-      order = create(:completed_order, user: user_2)
+      order = create(:completed_order, user: user_2, state: 'CA')
       create(:fulfilled_order_item, order: order, item: item_1)
       # Sorry Florida
-      order = create(:completed_order, user: user_3)
+      order = create(:completed_order, user: user_3, state: 'FL')
       create(:fulfilled_order_item, order: order, item: item_1)
-      order = create(:completed_order, user: user_4)
       # NY is 3rd place
+      order = create(:completed_order, user: user_4, state: 'NY')
       create(:fulfilled_order_item, order: order, item: item_1)
-      order = create(:completed_order, user: user_4)
+      order = create(:completed_order, user: user_4, state: 'NY')
       create(:fulfilled_order_item, order: order, item: item_1)
 
       expect(merchant.top_3_shipping_states).to eq(['CO', 'CA', 'NY'])
     end
     it '.top_3_shipping_cities' do
-      @user_1, @user_2, @user_3, @user_4 = create_list(:user, 4)
-      create(:address, city: 'Denver', user: @user_1.id)
-      create(:address, city: 'Houston', user: @user_2.id)
-      create(:address, city: 'Ottawa', user: @user_3.id)
-      create(:address, city: 'NYC', user: @user_4.id)
+      user_1, user_2, user_3, user_4 = create_list(:user, 4)
+      create(:address, city: 'Denver', user: user_1)
+      create(:address, city: 'Houston', user: user_2)
+      create(:address, city: 'Ottawa', user: user_3)
+      create(:address, city: 'NYC', user: user_4)
 
       merchant = create(:user, :merchant)
       item_1 = create(:item, user: merchant)
@@ -214,29 +214,29 @@ RSpec.describe User, type: :model do
       order = create(:completed_order, user: user_1)
       create(:fulfilled_order_item, order: order, item: item_1)
       # Houston is 1st place
-      order = create(:completed_order, user: user_2)
+      order = create(:completed_order, user: user_2, city: 'Houston')
       create(:fulfilled_order_item, order: order, item: item_1)
-      order = create(:completed_order, user: user_2)
+      order = create(:completed_order, user: user_2, city: 'Houston')
       create(:fulfilled_order_item, order: order, item: item_1)
-      order = create(:completed_order, user: user_2)
+      order = create(:completed_order, user: user_2, city: 'Houston')
       create(:fulfilled_order_item, order: order, item: item_1)
-      order = create(:completed_order, user: user_2)
+      order = create(:completed_order, user: user_2, city: 'Houston')
       create(:fulfilled_order_item, order: order, item: item_1)
       # Sorry Ottawa
-      order = create(:completed_order, user: user_3)
+      order = create(:completed_order, user: user_3, city: 'Ottawa')
       create(:fulfilled_order_item, order: order, item: item_1)
       # NYC is 3rd place
-      order = create(:completed_order, user: user_4)
+      order = create(:completed_order, user: user_4, city: 'NYC')
       create(:fulfilled_order_item, order: order, item: item_1)
-      order = create(:completed_order, user: user_4)
+      order = create(:completed_order, user: user_4, city: 'NYC')
       create(:fulfilled_order_item, order: order, item: item_1)
 
       expect(merchant.top_3_shipping_cities).to eq(['Houston', 'Denver', 'NYC'])
     end
     it '.top_active_user' do
-      @user_1, @user_2 = create_list(:user, 2)
-      create(:address, city: 'Denver', user: @user_1.id)
-      create(:address, city: 'Houston', user: @user_2.id)
+      user_1, user_2 = create_list(:user, 2)
+      create(:address, city: 'Denver', user: user_1)
+      create(:address, city: 'Houston', user: user_2)
       merchant = create(:user, :merchant)
       item_1 = create(:item, user: merchant)
 
@@ -254,9 +254,9 @@ RSpec.describe User, type: :model do
       expect(merchant.top_active_user).to eq(user_1)
     end
     it '.biggest_order' do
-      @user_1, @user_2 = create_list(:user, 2)
-      create(:address, city: 'Denver', user: @user_1.id)
-      create(:address, city: 'Houston', user: @user_2.id)
+      user_1, user_2 = create_list(:user, 2)
+      create(:address, city: 'Denver', user: user_1)
+      create(:address, city: 'Houston', user: user_2)
       merchant_1, merchant_2 = create_list(:user, 2, :merchant)
       item_1 = create(:item, user: merchant_1)
       item_2 = create(:item, user: merchant_2)
@@ -276,10 +276,10 @@ RSpec.describe User, type: :model do
       expect(merchant_1.biggest_order).to eq(order_1)
     end
     it '.top_buyers(3)' do 
-      @user_1, @user_2, @user_3 = create_list(:user, 3)
-      create(:address, city: 'Denver', user: @user_1.id)
-      create(:address, city: 'Houston', user: @user_2.id)
-      create(:address, city: 'Atlanta', user: @user_3.id)
+      user_1, user_2, user_3 = create_list(:user, 3)
+      create(:address, city: 'Denver', user: user_1)
+      create(:address, city: 'Houston', user: user_2)
+      create(:address, city: 'Atlanta', user: user_3)
 
       merchant_1, merchant_2 = create_list(:user, 2, :merchant)
       item_1 = create(:item, user: merchant_1)
