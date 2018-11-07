@@ -1,5 +1,45 @@
 <h1>Merchants</h1>
 
+<div class="leaderboards-container">
+  <div class="leaderboard">
+    <h2>Top Sellers</h2>
+    <p>(last 30 days)</p>
+    <ul>
+      <% @top_sellers.each do |merchant| %>
+        <li><%= link_to merchant.name, merchant_path(merchant) %>: <%= merchant.items_sold(30) %></li>
+      <% end %>
+    </ul>
+  </div>
+  <div>
+    <h2>Fastest Shippers</h2>
+    <p>(last 30 days)</p>
+  </div>
+</div>
+<% if current_user.role == 'user' %>
+  <div class="leaderboards-container">
+    <div class="leaderboard">
+      <h2>Top Sellers for <%= current_user.default_address.state %></h2>
+      <p>(last 30 days)</p>
+      <ul>
+        <% @top_sellers_state.each do |merchant| %>
+          <li><%= link_to merchant.name, merchant_path(merchant) %>: 
+              <%= merchant.items_fulfilled(30, 'state', current_user) %></li>
+        <% end %>
+      </ul>
+    </div>
+    <div class="leaderboard">
+      <h2>Top Sellers for <%= current_user.default_address.city %></h2>
+      <p>(last 30 days)</p>
+      <ul>
+        <% @top_sellers_city.each do |merchant| %>
+          <li><%= link_to merchant.name, merchant_path(merchant) %>: 
+              <%= merchant.items_fulfilled(30, 'city', current_user) %></li>
+        <% end %>
+      </ul>
+    </div>
+  </div>
+<% end %>
+
 <table>
   <thead>
     <tr>
@@ -15,6 +55,7 @@
     <% @merchants.each do |merchant| %>
       <tr id="merchant-<%= merchant.id %>">
         <td>
+        Items Sold: <%= merchant.items_fulfilled(30,'state',current_user) %>
         <% if current_admin? %>
         <%= link_to merchant.name, merchant_path(merchant) %>
         <% else %>

@@ -5,6 +5,9 @@ class MerchantsController < ApplicationController
     else
       @merchants = User.where(role: :merchant, active: true).order(:name)
     end 
+    @top_sellers = User.top_sellers
+    @top_sellers_state = User.top_fulfillers_my_region('state', current_user)
+    @top_sellers_city = User.top_fulfillers_my_region('city', current_user)
   end
 
   def show

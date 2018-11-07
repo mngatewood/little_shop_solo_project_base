@@ -152,4 +152,49 @@ class User < ApplicationRecord
     addresses.where(default: false, active: true)
   end
 
+  def self.top_sellers
+    User
+      .select("distinct users.*, sum(order_items.quantity) as items_sold")
+      .joins(:items)
+      .joins("join order_items on items.id=order_items.item_id")
+      .joins("join orders on orders.id=order_items.order_id")
+      .where(active: true)
+      .where("order_items.updated_at >= ?", Date.today - 30)
+      .group("users.id, order_items.id")
+      .order("items_sold desc, users.name")
+      .limit(10)
+  end
+
+  def self.top_fulfillers
+    User
+      .select("distinct users.*, sum(order_items.quantity) as items_sold")
+      .joins(:items)
+      .joins("join order_items on items.id=order_items.item_id")
+      .joins("join orders on orders.id=order_items.order_id")
+      .where(active: true)
+      .where("order_items.fulfilled = ?", true)
+      .where("orders.status != ?", :cancelled)
+      .where("order_items.updated_at >= ?", Date.today - 30)
+      .group("orders.id, users.id, order_items.id")
+      .order("items_sold desc, users.name")
+      .limit(10)
+  end
+
+  def self.top_fulfillers_my_region(region, user)
+    my_region = (region == 'city' ? user.default_address.city : user.default_address.state)
+
+    User
+      .select("distinct users.*, sum(order_items.quantity) as items_sold")
+      .joins(:items)
+      .joins("join order_items on items.id=order_items.item_id")
+      .joins("join orders on orders.id=order_items.order_id")
+      .where(active: true)
+      .where("order_items.fulfilled = ?", true)
+      .where("orders.status != ?", :cancelled)
+      .where("order_items.updated_at >= ?", Date.today - 30)
+      .where("orders.#{region} = ?", my_region)
+      .group("orders.id, users.id, order_items.id")
+      .order("items_sold desc, users.name")
+      .limit(5)
+  end
 end

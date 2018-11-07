@@ -300,5 +300,281 @@ RSpec.describe User, type: :model do
 
       expect(merchant_1.top_buyers(3)).to eq([user_2, user_1, user_3])
     end
+
+    # top 10 merchants by items sold in past 30 days
+    it 'self.top_sellers' do
+
+      user = create(:user_with_addresses)
+
+      merchant_1, 
+      merchant_2,
+      merchant_3,
+      merchant_4,
+      merchant_5,
+      merchant_6,
+      merchant_7,
+      merchant_8,
+      merchant_9,
+      merchant_10,
+      merchant_11,
+      merchant_12,
+      merchant_13,
+      merchant_14 = create_list(:user, 14, :merchant)
+      merchant_15 = create(:user, :inactive_merchant)
+
+      item_1 = create(:item, user: merchant_1)
+      item_2 = create(:item, user: merchant_2)
+      item_3 = create(:item, user: merchant_3)
+      item_4 = create(:item, user: merchant_4)
+      item_5 = create(:item, user: merchant_5)
+      item_6 = create(:item, user: merchant_6)
+      item_7 = create(:item, user: merchant_7)
+      item_8 = create(:item, user: merchant_8)
+      item_9 = create(:item, user: merchant_9)
+      item_10 = create(:item, user: merchant_10)
+      item_11 = create(:item, user: merchant_11)
+      item_12 = create(:item, user: merchant_12)
+      item_13 = create(:item, user: merchant_13)
+      item_14 = create(:item, user: merchant_14)
+      item_15 = create(:item, user: merchant_15)
+
+      order_1,
+      order_2,
+      order_3,
+      order_4,
+      order_5,
+      order_6,
+      order_7,
+      order_8,
+      order_9,
+      order_10,
+      order_11,
+      order_12 = create_list(:completed_order, 12, user: user)
+      order_13 = create(:cancelled_order, user: user)
+      order_14 = create(:order, user: user)
+      order_15 = create(:completed_order, user: user)
+
+      # not a top seller (not in top 10)
+      create(:fulfilled_order_item, quantity: 1, order: order_1, item: item_1)
+      create(:fulfilled_order_item, quantity: 2, order: order_2, item: item_2)
+
+      # top sellers
+      create(:fulfilled_order_item, quantity: 12, order: order_3, item: item_3)
+      create(:fulfilled_order_item, quantity: 13, order: order_4, item: item_4)
+      create(:fulfilled_order_item, quantity: 14, order: order_5, item: item_5)
+      create(:fulfilled_order_item, quantity: 15, order: order_6, item: item_6)
+      create(:fulfilled_order_item, quantity: 16, order: order_7, item: item_7)
+      create(:fulfilled_order_item, quantity: 17, order: order_8, item: item_8)
+      create(:fulfilled_order_item, quantity: 18, order: order_9, item: item_9)
+      create(:fulfilled_order_item, quantity: 19, order: order_10, item: item_10)
+
+      # not a top seller (not in top 10)
+      create(:fulfilled_order_item, quantity: 1, order: order_11, item: item_11)
+      # not in last 30 days (do not include)
+      create(:fulfilled_order_item, quantity: 100, order: order_12, item: item_12, updated_at: '1/1/2000')
+      # cancelled order (include)
+      create(:fulfilled_order_item, quantity: 20, order: order_13, item: item_13)
+      # pending order item (include)
+      create(:order_item, quantity: 21, order: order_14, item: item_14)
+      # inactive merchant (do not include)
+      create(:fulfilled_order_item, quantity: 100, order: order_15, item: item_15)
+
+      top_merchants = [ merchant_14,
+                        merchant_13,
+                        merchant_10,
+                        merchant_9,
+                        merchant_8,
+                        merchant_7,
+                        merchant_6,
+                        merchant_5,
+                        merchant_4,
+                        merchant_3 ]
+
+      expect(User.top_sellers).to eq(top_merchants)
+      
+    end
+
+    # top 10 merchants by items fulfilled in past 30 days
+    it 'self.top_fulfillers' do
+
+      user = create(:user_with_addresses)
+
+      merchant_1, 
+      merchant_2,
+      merchant_3,
+      merchant_4,
+      merchant_5,
+      merchant_6,
+      merchant_7,
+      merchant_8,
+      merchant_9,
+      merchant_10,
+      merchant_11,
+      merchant_12,
+      merchant_13,
+      merchant_14 = create_list(:user, 14, :merchant)
+      merchant_15 = create(:user, :inactive_merchant)
+
+      item_1 = create(:item, user: merchant_1)
+      item_2 = create(:item, user: merchant_2)
+      item_3 = create(:item, user: merchant_3)
+      item_4 = create(:item, user: merchant_4)
+      item_5 = create(:item, user: merchant_5)
+      item_6 = create(:item, user: merchant_6)
+      item_7 = create(:item, user: merchant_7)
+      item_8 = create(:item, user: merchant_8)
+      item_9 = create(:item, user: merchant_9)
+      item_10 = create(:item, user: merchant_10)
+      item_11 = create(:item, user: merchant_11)
+      item_12 = create(:item, user: merchant_12)
+      item_13 = create(:item, user: merchant_13)
+      item_14 = create(:item, user: merchant_14)
+      item_15 = create(:item, user: merchant_15)
+
+      order_1,
+      order_2,
+      order_3,
+      order_4,
+      order_5,
+      order_6,
+      order_7,
+      order_8,
+      order_9,
+      order_10,
+      order_11,
+      order_12 = create_list(:completed_order, 12, user: user)
+      order_13 = create(:cancelled_order, user: user)
+      order_14 = create(:order, user: user)
+      order_15 = create(:completed_order, user: user)
+
+      # top sellers
+      create(:fulfilled_order_item, quantity: 10, order: order_1, item: item_1)
+      create(:fulfilled_order_item, quantity: 11, order: order_2, item: item_2)
+      create(:fulfilled_order_item, quantity: 12, order: order_3, item: item_3)
+      create(:fulfilled_order_item, quantity: 13, order: order_4, item: item_4)
+      create(:fulfilled_order_item, quantity: 14, order: order_5, item: item_5)
+      create(:fulfilled_order_item, quantity: 15, order: order_6, item: item_6)
+      create(:fulfilled_order_item, quantity: 16, order: order_7, item: item_7)
+      create(:fulfilled_order_item, quantity: 17, order: order_8, item: item_8)
+      create(:fulfilled_order_item, quantity: 18, order: order_9, item: item_9)
+      create(:fulfilled_order_item, quantity: 19, order: order_10, item: item_10)
+
+      # not a top seller (not in top 10)
+      create(:fulfilled_order_item, quantity: 1, order: order_11, item: item_11)
+      # not in last 30 days (do not include)
+      create(:fulfilled_order_item, quantity: 100, order: order_12, item: item_12, updated_at: '1/1/2000')
+      # cancelled order (do not include)
+      create(:fulfilled_order_item, quantity: 100, order: order_13, item: item_13)
+      # pending order item (do not include)
+      create(:order_item, quantity: 100, order: order_14, item: item_14)
+      # inactive merchant (do not include)
+      create(:fulfilled_order_item, quantity: 100, order: order_15, item: item_15)
+
+      top_merchants = [ merchant_10,
+                        merchant_9,
+                        merchant_8,
+                        merchant_7,
+                        merchant_6,
+                        merchant_5,
+                        merchant_4,
+                        merchant_3,
+                        merchant_2,
+                        merchant_1 ]
+
+      expect(User.top_fulfillers).to eq(top_merchants)
+
+    end
+
+    # top 5 merchants by items sold in given city/state in past 30 days
+    it 'self.top_fulfillers_my_region' do
+
+      user, 
+      other_user = create_list(:user, 2)
+      create(:address, :denver, user: user)
+      create(:address, :default, city: 'Dallas', state: 'TX', user: other_user)
+
+      merchant_1, 
+      merchant_2,
+      merchant_3,
+      merchant_4,
+      merchant_5,
+      merchant_6,
+      merchant_7,
+      merchant_8,
+      merchant_9,
+      merchant_10,
+      merchant_11,
+      merchant_12,
+      merchant_13,
+      merchant_14 = create_list(:user, 14, :merchant)
+      merchant_15 = create(:user, :inactive_merchant)
+
+      item_1 = create(:item, user: merchant_1)
+      item_2 = create(:item, user: merchant_2)
+      item_3 = create(:item, user: merchant_3)
+      item_4 = create(:item, user: merchant_4)
+      item_5 = create(:item, user: merchant_5)
+      item_6 = create(:item, user: merchant_6)
+      item_7 = create(:item, user: merchant_7)
+      item_8 = create(:item, user: merchant_8)
+      item_9 = create(:item, user: merchant_9)
+      item_10 = create(:item, user: merchant_10)
+      item_11 = create(:item, user: merchant_11)
+      item_12 = create(:item, user: merchant_12)
+      item_13 = create(:item, user: merchant_13)
+      item_14 = create(:item, user: merchant_14)
+      item_15 = create(:item, user: merchant_15)
+
+      order_1,
+      order_2,
+      order_3,
+      order_4,
+      order_5 = create_list(:completed_order, 5, user: user)
+      order_6,
+      order_7,
+      order_8,
+      order_9,
+      order_10 = create_list(:completed_order_elsewhere, 5, user: other_user)
+      order_11,
+      order_12 = create_list(:completed_order, 2, user: user)
+      order_13 = create(:cancelled_order, user: user)
+      order_14 = create(:order, user: user)
+      order_15 = create(:completed_order, user: user)
+
+      # top sellers in region
+      create(:fulfilled_order_item, quantity: 10, order: order_1, item: item_1)
+      create(:fulfilled_order_item, quantity: 11, order: order_2, item: item_2)
+      create(:fulfilled_order_item, quantity: 12, order: order_3, item: item_3)
+      create(:fulfilled_order_item, quantity: 13, order: order_4, item: item_4)
+      create(:fulfilled_order_item, quantity: 14, order: order_5, item: item_5)
+
+      # sellers outside region (do not include)
+      create(:fulfilled_order_item, quantity: 15, order: order_6, item: item_6)
+      create(:fulfilled_order_item, quantity: 16, order: order_7, item: item_7)
+      create(:fulfilled_order_item, quantity: 17, order: order_8, item: item_8)
+      create(:fulfilled_order_item, quantity: 18, order: order_9, item: item_9)
+      create(:fulfilled_order_item, quantity: 19, order: order_10, item: item_10)
+
+      # not a top seller (not in top 10)
+      create(:fulfilled_order_item, quantity: 1, order: order_11, item: item_11)
+      # not in last 30 days (do not include)
+      create(:fulfilled_order_item, quantity: 100, order: order_12, item: item_12, updated_at: '1/1/2000')
+      # cancelled order (do not include)
+      create(:fulfilled_order_item, quantity: 100, order: order_13, item: item_13)
+      # pending order item (do not include)
+      create(:order_item, quantity: 100, order: order_14, item: item_14)
+      # inactive merchant (do not include)
+      create(:fulfilled_order_item, quantity: 100, order: order_15, item: item_15)
+
+      top_merchants = [ merchant_5,
+                        merchant_4,
+                        merchant_3,
+                        merchant_2,
+                        merchant_1 ]
+
+      expect(User.top_fulfillers_my_region('city', user)).to eq(top_merchants)
+      expect(User.top_fulfillers_my_region('state', user)).to eq(top_merchants)
+
+    end
   end
 end
