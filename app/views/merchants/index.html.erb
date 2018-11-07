@@ -4,16 +4,16 @@
   <div class="leaderboard">
     <h2>Top Sellers</h2>
     <p>(last 30 days)</p>
-    <ul>
+    <ul class="stats-top-sellers">
       <% @top_sellers.each do |merchant| %>
         <li><%= link_to merchant.name, merchant_path(merchant) %></li>
       <% end %>
     </ul>
   </div>
   <div>
-    <h2>Fastest Shippers</h2>
+    <h2>Top Fulfillers</h2>
     <p>(last 30 days)</p>
-    <ul>
+    <ul class="stats-top-fulfillers">
       <% @top_fulfillers.each do |merchant| %>
         <li><%= link_to merchant.name, merchant_path(merchant) %></li>
       <% end %>
@@ -24,7 +24,7 @@
     <div class="leaderboard">
       <h2>Top Sellers for <%= current_user.default_address.state %></h2>
       <p>(last 30 days)</p>
-      <ul>
+      <ul class="stats-top-sellers-state">
         <% @top_sellers_state.each do |merchant| %>
           <li><%= link_to merchant.name, merchant_path(merchant) %></li>
         <% end %>
@@ -33,7 +33,7 @@
     <div class="leaderboard">
       <h2>Top Sellers for <%= current_user.default_address.city %></h2>
       <p>(last 30 days)</p>
-      <ul>
+      <ul class="stats-top-sellers-city">
         <% @top_sellers_city.each do |merchant| %>
           <li><%= link_to merchant.name, merchant_path(merchant) %></li>
         <% end %>
