@@ -3,13 +3,14 @@ require 'rails_helper'
 RSpec.describe 'Merchant Stats' do
   context 'as a merchant, viewing my dashboard' do 
     before(:each) do
-      @merchant_1 = create(:merchant)
-      @merchant_2 = create(:merchant)
+      @merchant_1 = create(:user, :merchant)
+      @merchant_2 = create(:user, :merchant)
 
-      @user_1 = create(:user, city: 'Denver', state: 'CO')
-      @user_2 = create(:user, city: 'Los Angeles', state: 'CA')
-      @user_3 = create(:user, city: 'Tampa', state: 'FL')
-      @user_4 = create(:user, city: 'NYC', state: 'NY')
+      @user_1, @user_2, @user_3, @user_4 = create_list(:user, 4) 
+        create(:address, city: 'Denver', state: 'CO', user: @user_1.id)
+        create(:address, city: 'Los Angeles', state: 'CA', user: @user_2.id)
+        create(:address, city: 'Tampa', state: 'FL', user: @user_3.id)
+        create(:address, city: 'NYC', state: 'NY', user: @user_4.id)
 
       @item_1 = create(:item, user: @merchant_1)
 
@@ -39,7 +40,7 @@ RSpec.describe 'Merchant Stats' do
       create(:fulfilled_order_item, order: @order_A, item: @item_1)
     end
     it 'shows total items I have sold and as a percentage of inventory' do
-      merchant_1, merchant_2 = create_list(:merchant, 2)
+      merchant_1, merchant_2 = create_list(:user, 2, :merchant)
       total_units = 100
       sold_units = 20
       item_1 = create(:item, inventory: total_units, user: merchant_1)

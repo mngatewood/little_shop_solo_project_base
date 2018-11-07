@@ -41,7 +41,7 @@
 <%= button_to 'Empty Cart', cart_path, method: :delete %>
 
 <% if current_user %>
-  <%= button_to 'Check out', orders_path, method: :post %>
+  <%= button_to 'Check out', new_user_order_path(current_user), method: :get %>
 <% else %>
   <div id="must-log-in">
   You must <%= link_to 'register', register_path %> or

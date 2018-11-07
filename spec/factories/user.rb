@@ -1,38 +1,41 @@
 FactoryBot.define do
   factory :user, class: User do
+
+    trait :merchant do
+      role { 1 }
+    end
+    
+    trait :admin do
+      role { 2 }
+    end
+
+    trait :inactive_user do
+      role { 0 }
+      active { false }
+    end
+
+    trait :inactive_merchant do
+      role { 1 }
+      active { false }
+    end
+
     sequence(:email) { |n| "user_#{n}@gmail.com" }
     sequence(:password) { |n| "Password #{n}" }
     sequence(:name) { |n| "User #{n}" }
-    sequence(:address) { |n| "Address #{n}" }
-    sequence(:city) { |n| "City #{n}" }
-    sequence(:state) { |n| "State #{n}" }
-    sequence(:zip) { |n| "Zip #{n}" }
     role { 0 }
     active { true }
-  end
-  factory :inactive_user, parent: :user do
-    sequence(:email) { |n| "inactive_user_#{n}@gmail.com" }
-    role { 0 }
-    active { false }
-  end
 
-  factory :merchant, parent: :user do
-    sequence(:email) { |n| "merchant_#{n}@gmail.com" }
-    sequence(:name) { |n| "Merchant #{n}" }
-    role { 1 }
-    active { true }
-  end
-  factory :inactive_merchant, parent: :user do
-    sequence(:email) { |n| "inactive_merchant_#{n}@gmail.com" }
-    sequence(:name) { |n| "Merchant #{n}" }
-    role { 1 }
-    active { false }
-  end
+    factory :user_with_addresses do
 
-  factory :admin, parent: :user do
-    sequence(:email) { |n| "admin_#{n}@gmail.com" }
-    sequence(:name) { |n| "Admin #{n}" }
-    role { 2 }
-    active { true }
+      transient do
+        addresses_count { 2 }
+      end
+
+      after(:create) do |user, evalulator|
+        create(:address, :default, user: user)
+        create_list(:address, evalulator.addresses_count - 1, user: user)
+      end
+
+    end
   end
 end

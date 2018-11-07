@@ -4,10 +4,10 @@ include ActionView::Helpers::NumberHelper
 RSpec.describe 'Items Index' do
   context 'as a user' do 
     before(:each) do 
-      @merchant = create(:merchant)
+      @merchant = create(:user, :merchant)
       @active_item = create(:item, user: @merchant)
       @inactive_item = create(:inactive_item, name: 'inactive item 1')
-      @user = create(:user)
+      @user = create(:user_with_addresses)
       allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(@user)
     end
     describe 'visiting /items' do 
@@ -156,7 +156,7 @@ RSpec.describe 'Items Index' do
   end
   context 'as a visitor' do 
     it 'should tell me to login/register if I am a visitor' do 
-      @merchant = create(:merchant)
+      @merchant = create(:user, :merchant)
       FactoryBot.reload
       item_1, item_2 = create_list(:item, 2, user: @merchant)
 

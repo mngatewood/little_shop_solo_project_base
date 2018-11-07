@@ -1,3 +1,30 @@
-<h1>Editing Order</h1>
+<h1>Change Shipping Address</h1>
 
-<%= render 'form', order: @order %>
+<%= form_for @order, url: user_order_path, method: :patch do |f| %>
+
+  <p>Current Shipping Address</p>
+
+    <p><%= @user.name %><br/>
+      <%= @order.street %><br/>
+      <%= @order.city %>, <%= @order.state %><br/>
+      <%= @order.zip %>
+    </p>
+
+  <p>Select the desired shipping address:</p>
+
+  <% @addresses.each do |address| %>
+
+    <div class="field">
+      <%= f.radio_button :address, address.id, checked: (address == @addresses.first) %>
+      <%= f.label :address, "#{address.street}, #{address.city}, #{address.state} #{address.zip}" %>
+    </div>
+
+  <% end %>
+
+    <p><%= link_to "Add an address", new_user_address_path(@user) %></p>
+
+    <div class="actions">
+      <%= f.submit "Update Address" %>
+    </div>
+
+<% end %>

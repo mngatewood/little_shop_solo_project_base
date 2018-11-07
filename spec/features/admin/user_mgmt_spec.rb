@@ -2,10 +2,10 @@ require 'rails_helper'
 
 RSpec.describe 'Admin-only user management' do 
   before(:each) do
-    @admin = create(:admin)
-    @active_user = create(:user)
-    @inactive_user = create(:inactive_user)
-    @active_merchant = create(:merchant)
+    @admin = create(:user, :admin)
+    @active_user = create(:user_with_addresses)
+    @inactive_user = create(:user, :inactive_user)
+    @active_merchant = create(:user, :merchant)
   end
   it 'allows admin to disable an enabled user account' do
     visit login_path

@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe 'User Index Page, only for admins' do
   context 'As an admin user' do
     before(:each) do 
-      @admin = create(:admin)
+      @admin = create(:user, :admin)
       allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(@admin)
     end
 
@@ -23,8 +23,8 @@ RSpec.describe 'User Index Page, only for admins' do
       end
     end
     it 'should show enable/disable buttons as appropriate' do
-      @user_1 = create(:user)
-      @user_2 = create(:inactive_user)
+      @user_1 = create(:user_with_addresses)
+      @user_2 = create(:user, :inactive_user)
 
       visit users_path
 
@@ -60,7 +60,7 @@ describe 'Invalid permissions' do
   
   context 'as a merchant' do
     it 'should block user index page from anonymous users' do
-      merchant = create(:merchant)
+      merchant = create(:user, :merchant)
       allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(merchant)
 
       visit users_path

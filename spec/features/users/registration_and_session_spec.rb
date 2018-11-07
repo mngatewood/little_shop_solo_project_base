@@ -6,16 +6,16 @@ RSpec.describe 'Registration and Session Management' do
       email = 'fred@gmail.com'
       password = 'test1234'
       visit register_path
-  
+
       expect(current_path).to eq(register_path)
       fill_in :user_email, with: email
       fill_in :user_password, with: password
       fill_in :user_password_confirmation, with: password
       fill_in :user_name, with: 'Name'
-      fill_in :user_address, with: 'Address'
-      fill_in :user_city, with: 'City'
-      fill_in :user_state, with: 'State'
-      fill_in :user_zip, with: 'Zip'
+      fill_in 'Street', with: 'Street'
+      fill_in 'City', with: 'City'
+      fill_in 'State', with: 'State'
+      fill_in 'Zip', with: 'Zip'
       click_button 'Create User'
 
       expect(current_path).to eq(profile_path)
@@ -27,7 +27,7 @@ RSpec.describe 'Registration and Session Management' do
         click_button 'Create User'
 
         expect(current_path).to eq(users_path)
-        expect(page).to have_content('7 errors prohibited this user from being saved')
+        expect(page).to have_content('3 errors prohibited this user from being saved')
       end
 
       it 'because password confirmation was wrong' do
@@ -40,10 +40,10 @@ RSpec.describe 'Registration and Session Management' do
         fill_in :user_password, with: password
         fill_in :user_password_confirmation, with: 'something else'
         fill_in :user_name, with: 'Name'
-        fill_in :user_address, with: 'Address'
-        fill_in :user_city, with: 'City'
-        fill_in :user_state, with: 'State'
-        fill_in :user_zip, with: 'Zip'
+        fill_in 'Street', with: 'Street'
+        fill_in 'City', with: 'City'
+        fill_in 'State', with: 'State'
+        fill_in 'Zip', with: 'Zip'
         click_button 'Create User'
 
         expect(current_path).to eq(users_path)
@@ -59,10 +59,10 @@ RSpec.describe 'Registration and Session Management' do
         fill_in :user_password, with: password
         fill_in :user_password_confirmation, with: password
         fill_in :user_name, with: 'Name'
-        fill_in :user_address, with: 'Address'
-        fill_in :user_city, with: 'City'
-        fill_in :user_state, with: 'State'
-        fill_in :user_zip, with: 'Zip'
+        fill_in 'Street', with: 'Street'
+        fill_in 'City', with: 'City'
+        fill_in 'State', with: 'State'
+        fill_in 'Zip', with: 'Zip'
         click_button 'Create User'
 
         expect(current_path).to eq(users_path)
@@ -75,7 +75,7 @@ RSpec.describe 'Registration and Session Management' do
     before(:each) do
       @email = 'drpepper@gmail.com'
       @password = 'awesomesoda'
-      @user = create(:user, email: @email, password: @password)
+      @user = create(:user_with_addresses, email: @email, password: @password)
     end
     it 'should succeed if credentials are correct' do
       visit root_path
@@ -126,7 +126,7 @@ RSpec.describe 'Registration and Session Management' do
     before(:each) do
       @email = 'drpepper@gmail.com'
       @password = 'awesomesoda'
-      @user = create(:user, email: @email, password: @password)
+      @user = create(:user_with_addresses, email: @email, password: @password)
     end
     it 'should succeed if credentials are correct' do
       visit login_path

@@ -1,0 +1,28 @@
+<%= fields_for @address do |af| %>
+
+  <div class="field">
+    <%= af.label :nickname %>
+    <%= af.text_field :nickname %>
+  </div>
+
+  <div class="field">
+    <%= af.label :street %>
+    <%= af.text_field :street %>
+  </div>
+
+  <div class="field">
+    <%= af.label :city %>
+    <%= af.text_field :city %>
+  </div>
+
+  <div class="field">
+    <%= af.label :state %>
+    <%= af.text_field :state %>
+  </div>
+
+  <div class="field">
+    <%= af.label :zip %>
+    <%= af.text_field :zip %>
+  </div>
+
+<% end %>

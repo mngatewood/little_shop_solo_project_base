@@ -3,9 +3,12 @@ class User < ApplicationRecord
 
   has_many :orders
   has_many :items
+  has_many :addresses
 
-  validates_presence_of :name, :address, :city, :state, :zip
+  validates_presence_of :name
   validates :email, presence: true, uniqueness: true
+
+  accepts_nested_attributes_for :addresses
 
   enum role: %w(user merchant admin)
 
@@ -140,4 +143,13 @@ class User < ApplicationRecord
   def self.slowest_merchants(quantity)
     merchant_by_speed(quantity, :desc)
   end
+
+  def default_address
+    addresses.find_by(default: true, active: true)
+  end
+  
+  def other_addresses
+    addresses.where(default: false, active: true)
+  end
+
 end

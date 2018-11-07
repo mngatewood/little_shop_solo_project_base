@@ -3,8 +3,8 @@ require 'rails_helper'
 RSpec.describe 'Item Stats' do
   context 'seeing stats when visiting /items' do
     before(:each) do
-      @user = create(:user)
-      @merchants = create_list(:merchant, 10)
+      @user = create(:user_with_addresses)
+      @merchants = create_list(:user, 10, :merchant)
       @item_1 = create(:item, user: @merchants[0])
       @item_2 = create(:item, user: @merchants[1])
       @item_3 = create(:item, user: @merchants[2])

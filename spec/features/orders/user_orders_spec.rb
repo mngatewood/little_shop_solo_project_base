@@ -2,15 +2,15 @@ require 'rails_helper'
 
 RSpec.describe 'User Order pages' do
   before(:each) do
-    @user = create(:user)
-    @admin = create(:admin)
+    @user = create(:user_with_addresses)
+    @admin = create(:user, :admin)
     @msg_no_orders_yet = 'Sorry there are no orders yet.'
   end
 
   context 'admin user' do 
     context 'having order data' do
       before(:each) do
-        @merchant = create(:merchant)
+        @merchant = create(:user, :merchant)
         @item_1, @item_2, @item_3, @item_4, @item_5 = create_list(:item, 5, user: @merchant)
         
         @order_1 = create(:order, user: @user)
@@ -48,7 +48,7 @@ RSpec.describe 'User Order pages' do
       end
       it 'should not show the error message if there is order data to fetch' do
         allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(@admin)
-        merchant = create(:merchant)
+        merchant = create(:user, :merchant)
         @item_1, @item_2, @item_3, @item_4, @item_5 = create_list(:item, 5, user: merchant)
     
         visit orders_path
@@ -68,7 +68,7 @@ RSpec.describe 'User Order pages' do
       allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(@user)
     end
     it 'should show all orders when a user visits their own order page' do
-      merchant = create(:merchant)
+      merchant = create(:user, :merchant)
       @item_1, @item_2, @item_3, @item_4, @item_5 = create_list(:item, 5, user: merchant)
 
       @order_1 = create(:order, user: @user)

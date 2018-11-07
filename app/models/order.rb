@@ -4,6 +4,10 @@ class Order < ApplicationRecord
   has_many :items, through: :order_items
 
   validates_presence_of :status
+  validates_presence_of :street
+  validates_presence_of :city
+  validates_presence_of :state
+  validates_presence_of :zip
 
   def total 
     oi = order_items.pluck("sum(quantity*price)")
@@ -46,5 +50,9 @@ class Order < ApplicationRecord
       .order('item_count desc')
       .group('items.user_id, orders.id, order_items.id, users.id')
       .limit(quantity)
+  end
+
+  def no_items_fulfilled?
+    binding.pry
   end
 end

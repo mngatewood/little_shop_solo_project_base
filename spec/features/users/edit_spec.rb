@@ -50,7 +50,7 @@ RSpec.describe 'User Edit Page, aka Profile Edit' do
 
   context 'As an admin user' do
     before(:each) do 
-      admin = create(:admin)
+      admin = create(:user, :admin)
       @new_email = 'new_email@gmail.com'
 
       allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(admin)
@@ -104,7 +104,7 @@ RSpec.describe 'User Edit Page, aka Profile Edit' do
 
     context 'as a merchant' do
       it 'should block a user edit page from anonymous users' do
-        merchant = create(:merchant)
+        merchant = create(:user, :merchant)
         allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(merchant)
 
         visit edit_user_path(@user)

@@ -18,8 +18,8 @@ RSpec.describe OrderItem, type: :model do
 
   describe 'Instance Methods' do 
     it '.subtotal' do
-      @user = create(:user)
-      @merchant = create(:merchant)
+      @user = create(:user_with_addresses)
+      @merchant = create(:user, :merchant)
       @item_1 = create(:item, user: @merchant)
       @order_4 = create(:order, user: @user)
       order_item = create(:order_item, order: @order_4, item: @item_1)

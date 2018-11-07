@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :item do
-    association :user, factory: :merchant
+    association :user
     sequence(:name) { |n| "Name #{n}" }
     sequence(:description) { |n| "Description #{n}" }
     sequence(:image) { |n| "https://picsum.photos/200/300?image=#{n}" }
@@ -10,7 +10,7 @@ FactoryBot.define do
   end
 
   factory :inactive_item, parent: :item do
-    association :user, factory: :merchant
+    association :user
     sequence(:name) { |n| "Inactive Name #{n}" }
     active { false }
   end
