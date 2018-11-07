@@ -53,6 +53,6 @@ class Order < ApplicationRecord
   end
 
   def no_items_fulfilled?
-    binding.pry
+
   end
 end
